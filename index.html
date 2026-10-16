@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Atividade prática de Desenvolvimento de Sistemas: Python, Flask, HTML, VS Code e conexão em rede Wi-Fi.">
+<title>Atividade prática — Construindo um site conectado em rede</title>
+<style>
+:root {color-scheme:light;--bg:#f3f6fb;--paper:#fff;--ink:#1a2c43;--muted:#5e7086;--navy:#112b49;--blue:#1f69ab;--line:#dce5ef;--code:#122235;--teal:#2fc6bc;--shadow:0 18px 48px rgba(20,42,68,.065)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#135da3}
+.top{min-height:300px;background:linear-gradient(117deg,#102b49 0%,#16436c 65%,#1f587b 100%);color:#fff;position:relative;overflow:hidden}
+.top:before,.top:after{content:"";position:absolute;right:-80px;top:-140px;border:1px solid #ffffff24;width:500px;height:500px;border-radius:50%;pointer-events:none}
+.top:after{right:30px;top:-28px;width:265px;height:265px}
+.top-inner{max-width:1230px;margin:auto;padding:49px 30px 48px;position:relative;z-index:1}
+.eyebrow{font-size:.73rem;letter-spacing:.18em;font-weight:800;text-transform:uppercase;color:#91dfdb;margin-bottom:16px;display:block}
+.top h1{font-size:clamp(2.1rem,4.1vw,3.45rem);line-height:1.12;letter-spacing:-.04em;font-weight:800;max-width:900px;margin:0 0 27px}
+.metadata{display:grid;grid-template-columns:1fr;gap:7px;font-size:.92rem;color:#eef5ff}
+.metadata .info{margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.metadata strong{color:#a3efeb;font-weight:700}
+.top-actions{position:absolute;right:30px;bottom:48px;display:flex;gap:9px}
+.tool-btn{border:1px solid #ffffff5e;background:#ffffff16;border-radius:9px;padding:9px 13px;color:#fff;cursor:pointer;font:600 .81rem system-ui}
+.tool-btn:hover{background:#ffffff2a}
+.layout{max-width:1230px;margin:35px auto 80px;padding:0 30px;display:grid;grid-template-columns:256px minmax(0,1fr);gap:31px;align-items:start}
+.side{position:sticky;top:22px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 15px;box-shadow:var(--shadow)}
+.side-title{font-size:.77rem;text-transform:uppercase;letter-spacing:.11em;color:#607995;font-weight:800;margin:0 10px 16px}
+.side nav{display:grid;gap:3px}
+.side a{font-size:.83rem;line-height:1.38;display:flex;align-items:flex-start;gap:10px;padding:10px 11px;color:#4b627a;text-decoration:none;border-radius:9px}
+.side a span{flex:0 0 21px;font-size:.73rem;font-variant-numeric:tabular-nums;color:#8ca0b6;font-weight:800}
+.side a:hover,.side a.active{background:#eaf4fb;color:#0a568d}
+.main{min-width:0}
+.lesson-section{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:33px 41px;margin-bottom:24px;box-shadow:var(--shadow);scroll-margin-top:24px}
+.lesson-section:first-child{border-top:5px solid #28b6ae}
+h2{font-size:1.5rem;letter-spacing:-.027em;line-height:1.35;margin:0 0 24px;color:var(--navy)}
+.lesson-section.numbered h2{display:flex;gap:17px;align-items:center}
+.step-number{display:flex;align-items:center;justify-content:center;background:#e8f3fb;color:#1468a1;flex:0 0 44px;height:44px;border-radius:12px;font-size:1rem;font-weight:800;letter-spacing:0}
+.section-title-text{flex:1}
+h3{font-size:1.13rem;color:#174269;margin:32px 0 12px}
+p{margin:0 0 17px}
+p:last-child{margin-bottom:0}
+strong{font-weight:730;color:#213854}
+ol,ul{padding-left:27px;margin:15px 0 21px}
+li{padding-left:6px;margin:5px 0}
+li::marker{font-weight:750;color:#4384b7}
+p code,li code{padding:2px 6px;background:#edf3fa;border:1px solid #deeaf4;border-radius:5px;font: .91em ui-monospace,SFMono-Regular,Consolas,monospace;color:#184f80;word-break:break-word}
+.code-wrap{border:1px solid #30415a;border-radius:12px;background:var(--code);overflow:hidden;margin:19px 0 25px}
+.code-toolbar{height:42px;background:#21354b;display:flex;align-items:center;justify-content:space-between;padding:0 13px 0 18px;border-bottom:1px solid #415064}
+.code-lang{font:800 .67rem ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.09em;color:#94ccca}
+.copy-code{background:#344a62;color:#e8f0f9;border:1px solid #627285;padding:5px 11px;border-radius:6px;font-size:.73rem;cursor:pointer}
+.copy-code:hover{background:#46617a}
+pre{margin:0;padding:19px 22px;overflow:auto;tab-size:4}
+pre code{font: .79rem/1.7 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:#f1f4fb;white-space:pre}
+.end-space{height:20px}
+@media(max-width:1000px){.top-actions{position:static;margin-top:24px}.layout{grid-template-columns:1fr}.side{position:static}.side nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.top-inner{padding:35px 18px}.layout{padding:0 12px;margin:17px auto}.lesson-section{padding:24px 20px;border-radius:14px}.side{display:none}.lesson-section.numbered h2{gap:11px}.step-number{flex-basis:36px;height:36px;border-radius:9px}h2{font-size:1.22rem}pre{padding:13px 14px}pre code{font-size:.71rem}.top h1{font-size:2rem}}
+@media print{@page{size:A4;margin:14mm 15mm}body{background:#fff;font-size:10.4pt;color:#1a2738}.top{background:#fff!important;color:#152d49!important;min-height:0;border-bottom:2px solid #1d6c9e}.top:before,.top:after{display:none}.top-inner{padding:0 0 13px}.eyebrow{color:#206a8a}.top h1{font-size:23pt;max-width:none;margin-bottom:13px}.metadata{color:#263e59}.metadata strong{color:#164b75}.top-actions,.side,.copy-code{display:none!important}.layout{display:block;max-width:none;margin:0;padding:0}.lesson-section,.lesson-section:first-child{margin:0;padding:17px 0 11px;border:none;border-bottom:1px solid #d8e1ec;border-radius:0;box-shadow:none}.lesson-section h2{font-size:15pt;margin:0 0 14px;break-after:avoid}.step-number{width:28px;height:28px;flex-basis:28px;background:#eee;color:#134d6c}h3{font-size:12pt}p{margin-bottom:9px}ol,ul{margin:8px 0 12px}li{margin:2px 0}.code-wrap{break-inside:avoid;border:1px solid #ccd6e2;background:#f6f8fb;margin:10px 0 14px}.code-toolbar{background:#e6ecf3;height:23px;border-bottom:1px solid #ccd6e2}.code-lang{color:#294860}pre{padding:10px 12px;white-space:pre-wrap}pre code{color:#12243a;font-size:8pt;white-space:pre-wrap;overflow-wrap:anywhere}.lesson-section p,.lesson-section li{orphans:3;widows:3}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+<span class="eyebrow">Atividade prática · Desenvolvimento de Sistemas</span>
+<h1>Atividade prática — Construindo um site conectado em rede</h1>
+<div class="metadata">
+<p class="info"><strong>Disciplina:</strong> Desenvolvimento de Sistemas</p>
+<p class="info"><strong>Tecnologias:</strong> Python, Flask, HTML e VS Code</p>
+<p class="info"><strong>Tema:</strong> Comunicação entre computadores utilizando uma rede Wi-Fi</p>
+</div>
+<div class="top-actions"><button class="tool-btn" onclick="window.print()" type="button">Imprimir / salvar em PDF</button></div>
+</div></header>
+<div class="layout">
+<aside class="side" aria-label="Navegação das etapas"><p class="side-title">Índice da atividade</p><nav><a href="#apresentacao">Apresentação</a>
+<a href="#etapa-1"><span>01</span> Preparando nossa rede</a>
+<a href="#etapa-2"><span>02</span> Criando o projeto no VS Code</a>
+<a href="#etapa-3"><span>03</span> Instalando o Flask</a>
+<a href="#etapa-4"><span>04</span> Programando o servidor</a>
+<a href="#etapa-5"><span>05</span> Construindo a página HTML</a>
+<a href="#etapa-6"><span>06</span> Ligando nosso servidor</a>
+<a href="#etapa-7"><span>07</span> Descobrindo o IP</a>
+<a href="#etapa-8"><span>08</span> Acessando de outro computador</a>
+<a href="#etapa-9"><span>09</span> Testando nosso mural coletivo</a></nav></aside>
+<main class="main" id="conteudo"><section class="lesson-section" id="apresentacao"><h2>Apresentação</h2><p>Hoje vamos realizar uma experiência importante para compreender como os computadores se comunicam.</p><p>Até agora, estudamos conceitos como cliente, servidor, endereço IP, porta e banco de dados. Nesta atividade, vamos colocar parte desses conhecimentos em prática.</p><p>Nosso desafio será <strong>criar um site em um computador e permitir que outros computadores o acessem pela rede Wi-Fi de um celular.</strong></p><p>Para isso, utilizaremos o VS Code para desenvolver o projeto, o Python com Flask para executar o servidor e o HTML para construir a página.</p><p>Também criaremos um mural de mensagens. Assim, diferentes computadores poderão enviar informações para um mesmo servidor.</p><p>Ao final, vocês perceberão que uma aplicação desenvolvida por vocês pode funcionar em outros dispositivos, sem precisar ser publicada na internet.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-1"><h2><span class="step-number">01</span><span class="section-title-text">Etapa 1 — Preparando nossa rede</span></h2><p>Antes de começarmos a programação, precisamos conectar os computadores.</p><p>Um integrante do grupo deverá disponibilizar uma rede Wi-Fi utilizando a função de roteador do celular.</p><p>No celular:</p><ol>
+<li>Acesse as configurações.</li>
+<li>Procure <strong>Roteador Wi-Fi</strong>, <strong>Ponto de acesso</strong> ou <strong>Hotspot</strong>.</li>
+<li>Ative a função e configure uma senha.</li>
+<li>Conecte os computadores do grupo à mesma rede Wi-Fi.</li>
+</ol><p>Não é necessário utilizar os dados móveis para a comunicação local. O importante é que os computadores estejam conectados à mesma rede e que o celular permita a comunicação entre eles.</p><p><strong>Como será nossa organização?</strong></p><ul>
+<li>O celular cria a rede Wi-Fi.</li>
+<li>Um computador será escolhido como servidor.</li>
+<li>Os outros computadores serão os clientes.</li>
+<li>Todos acessarão o mesmo site.</li>
+</ul></section><section class="lesson-section   n u m b e r e d" id="etapa-2"><h2><span class="step-number">02</span><span class="section-title-text">Etapa 2 — Criando o projeto no VS Code</span></h2><p>No computador escolhido como servidor, vamos organizar nossos arquivos.</p><ol>
+<li>Abra o VS Code.</li>
+<li>Crie uma pasta chamada <code>rede-flask</code>.</li>
+<li>No VS Code, escolha <strong>Arquivo → Abrir Pasta</strong>.</li>
+<li>Abra a pasta que acabamos de criar.</li>
+</ol><p>Dentro dela, crie um arquivo chamado:</p><p><code>app.py</code></p><p>Em seguida, crie uma pasta chamada:</p><p><code>templates</code></p><p>Dentro da pasta <code>templates</code>, crie:</p><p><code>index.html</code></p><p>Nossa organização ficará assim:</p><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">TEXT</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-text">rede-flask/
+│
+├── app.py
+│
+└── templates/
+    └── index.html
+</code></pre></div><p><strong>Por que precisamos desses arquivos?</strong></p><p>O <code>app.py</code> será responsável pela programação do servidor. Já o <code>index.html</code> será responsável pela página exibida no navegador.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-3"><h2><span class="step-number">03</span><span class="section-title-text">Etapa 3 — Instalando o Flask</span></h2><p>O Flask é uma ferramenta do Python que permite desenvolver aplicações web.</p><p>Com ele, podemos transformar nosso programa em um servidor capaz de receber solicitações de outros computadores.</p><p>No VS Code:</p><ol>
+<li>Clique em <strong>Terminal → Novo Terminal</strong>.</li>
+<li>Digite o comando:</li>
+</ol><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">POWERSHELL</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-powershell">py -m pip install flask
+</code></pre></div><ol start="3">
+<li>Pressione Enter e aguarde a instalação.</li>
+</ol><p>Caso o comando <code>py</code> não funcione, tentem utilizar <code>python</code> no lugar dele.</p><p><strong>Atenção:</strong> para instalar o Flask, o computador poderá precisar de acesso à internet. Se já estiver instalado, não será necessário instalar novamente.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-4"><h2><span class="step-number">04</span><span class="section-title-text">Etapa 4 — Programando o servidor</span></h2><p>Agora vamos escrever o código responsável pelo funcionamento do nosso site.</p><p>Abra o arquivo <code>app.py</code> e insira:</p><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">PYTHON</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-python">from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+mensagens = []
+
+@app.route("/", methods=["GET", "POST"])
+def inicio():
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()[:30]
+        texto = request.form.get("mensagem", "").strip()[:200]
+
+        if nome and texto:
+            mensagens.append({
+                "nome": nome,
+                "texto": texto
+            })
+
+        return redirect(url_for("inicio"))
+
+    return render_template(
+        "index.html",
+        mensagens=mensagens
+    )
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=False
+    )
+</code></pre></div><p>Salve o arquivo com <code>Ctrl + S</code>.</p><h3>Vamos compreender o que programamos?</h3><p>O Flask cria uma aplicação web. Quando alguém acessa o endereço do servidor, o Python envia a página HTML.</p><p>Quando uma pessoa preenche o formulário, o Python recebe os dados e adiciona uma mensagem à lista.</p><p>A informação passa a estar disponível para os demais computadores que acessam o site.</p><p>Observem especialmente:</p><p><code>host="0.0.0.0"</code></p><p>Essa configuração permite ao Flask receber conexões pela rede, e não somente do próprio computador.</p><p>Já <code>port=5000</code> indica a porta utilizada pela aplicação.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-5"><h2><span class="step-number">05</span><span class="section-title-text">Etapa 5 — Construindo a página HTML</span></h2><p>Agora vamos criar a parte visual do nosso projeto.</p><p>Abra o arquivo <code>index.html</code>, localizado dentro da pasta <code>templates</code>.</p><p>Insira o código:</p><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">HTML</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+
+    &lt;title&gt;Nosso Mural Digital&lt;/title&gt;
+
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            background: #eaf0f5;
+            color: #243447;
+            text-align: center;
+            padding: 30px;
+        }
+
+        main {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #245b91;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mensagem {
+            background: white;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;main&gt;
+        &lt;h1&gt;Nosso Mural Digital&lt;/h1&gt;
+
+        &lt;p&gt;
+            Uma rede, vários computadores,
+            muitas ideias!
+        &lt;/p&gt;
+
+        &lt;form method="POST"&gt;
+            &lt;input
+                type="text"
+                name="nome"
+                placeholder="Seu nome"
+                maxlength="30"
+                required
+            &gt;
+
+            &lt;textarea
+                name="mensagem"
+                placeholder="Escreva sua mensagem"
+                maxlength="200"
+                required
+            &gt;&lt;/textarea&gt;
+
+            &lt;button type="submit"&gt;
+                Enviar mensagem
+            &lt;/button&gt;
+        &lt;/form&gt;
+
+        &lt;h2&gt;Mensagens compartilhadas&lt;/h2&gt;
+
+        {% for mensagem in mensagens %}
+
+        &lt;div class="mensagem"&gt;
+            &lt;strong&gt;{{ mensagem.nome }}&lt;/strong&gt;
+            &lt;p&gt;{{ mensagem.texto }}&lt;/p&gt;
+        &lt;/div&gt;
+
+        {% endfor %}
+    &lt;/main&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre></div><p>Salve o arquivo.</p><p><strong>O que construímos?</strong></p><p>Criamos uma página com título, formulário e um espaço para visualizar as mensagens compartilhadas.</p><p>O HTML organiza os elementos, enquanto o CSS define sua aparência. O Flask conecta essa página à programação em Python.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-6"><h2><span class="step-number">06</span><span class="section-title-text">Etapa 6 — Ligando nosso servidor</span></h2><p>Voltaremos ao terminal do VS Code.</p><p>Certifiquem-se de que estão na pasta <code>rede-flask</code> e executem:</p><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">POWERSHELL</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-powershell">py app.py
+</code></pre></div><p>Se o comando funcionar, o terminal apresentará uma mensagem semelhante a:</p><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">TEXT</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-text">Running on http://127.0.0.1:5000
+</code></pre></div><p>Isso significa que nosso servidor começou a funcionar.</p><p>Para testar, abram o navegador do próprio computador servidor e acessem:</p><p><code>http://127.0.0.1:5000</code></p><p>A página deverá aparecer.</p><p><strong>Importante:</strong> não fechem o terminal enquanto estiverem utilizando o servidor.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-7"><h2><span class="step-number">07</span><span class="section-title-text">Etapa 7 — Descobrindo o IP do computador</span></h2><p>Nosso site já funciona, mas ainda precisamos permitir que os outros computadores o encontrem.</p><p>Como fazemos isso?</p><p>Cada computador conectado à rede recebe um endereço IP.</p><p>Esse endereço permite identificar o dispositivo durante a comunicação.</p><p>No computador servidor:</p><ol>
+<li>Abra outro terminal no VS Code, sem fechar o terminal que executa o Flask.</li>
+<li>Digite:</li>
+</ol><div class="code-wrap"><div class="code-toolbar"><span class="code-lang">POWERSHELL</span><button aria-label="Copiar código" class="copy-code" type="button">Copiar código</button></div><pre><code class="language-powershell">ipconfig
+</code></pre></div><ol start="3">
+<li>Procure o endereço IPv4 da conexão Wi-Fi.</li>
+</ol><p>Exemplo:</p><p><code>192.168.43.101</code></p><p>Esse número é apenas um exemplo. Vocês deverão utilizar o IP encontrado no próprio computador.</p><p>Anotem esse endereço, pois ele será utilizado pelos colegas.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-8"><h2><span class="step-number">08</span><span class="section-title-text">Etapa 8 — Acessando o site em outro computador</span></h2><p>Chegamos ao principal desafio!</p><p>No segundo computador, conectado ao mesmo Wi-Fi do celular:</p><ol>
+<li>Abra um navegador.</li>
+<li>Digite o endereço IP do servidor.</li>
+<li>Acrescente <code>:5000</code> ao final.</li>
+</ol><p>Exemplo:</p><p><code>http://192.168.43.101:5000</code></p><p>Pressione Enter.</p><p>Se a comunicação estiver funcionando, o site aparecerá no navegador do segundo computador.</p><p>Isso significa que conseguimos estabelecer uma comunicação entre computadores utilizando a rede local!</p><p>Caso a página não abra, verifiquem se os dispositivos estão no mesmo Wi-Fi, se o IP está correto e se o servidor continua funcionando. O firewall ou as configurações do roteador também podem impedir a conexão; nesse caso, solicitem orientação ao professor.</p></section><section class="lesson-section   n u m b e r e d" id="etapa-9"><h2><span class="step-number">09</span><span class="section-title-text">Etapa 9 — Testando nosso mural coletivo</span></h2><p>Agora vamos verificar como funciona uma aplicação compartilhada.</p><p>Realizem o seguinte experimento:</p><ol>
+<li>No computador 1, abram o site e enviem uma mensagem.</li>
+<li>No computador 2, abram a mesma página.</li>
+<li>Verifiquem se a mensagem está aparecendo.</li>
+<li>Enviem outra mensagem pelo computador 2.</li>
+<li>Atualizem a página do computador 1 utilizando <code>F5</code>.</li>
+</ol><p>Observem o resultado.</p><p>Os computadores estão acessando uma mesma aplicação, executada em um único servidor.</p><p><strong>Percebam a importância dessa experiência:</strong> os clientes não precisam ter o código Python instalado. Eles acessam a aplicação pelo navegador, enquanto o servidor executa a programação.</p><p>As mensagens ficam armazenadas temporariamente na memória do programa. Quando o servidor for reiniciado, elas serão apagadas. Em uma próxima etapa, poderemos utilizar o SQLite para armazená-las permanentemente.</p><p><strong>Entrega no Google Classroom</strong></p><p>Enviem uma captura de tela mostrando o site funcionando.</p></section></main>
+</div>
+<script>
+for (const button of document.querySelectorAll('.copy-code')) {
+  button.addEventListener('click', async () => {
+    const raw = button.closest('.code-wrap').querySelector('code').textContent;
+    try {
+      if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(raw);
+      else {
+        const field = document.createElement('textarea');
+        field.value = raw; field.style.position='fixed'; field.style.opacity='0';
+        document.body.appendChild(field); field.select();
+        if (!document.execCommand('copy')) throw new Error('Cópia indisponível');
+        field.remove();
+      }
+      button.textContent='Copiado!';
+      setTimeout(() => button.textContent='Copiar código', 1600);
+    } catch (err) { button.textContent='Selecione e copie'; setTimeout(() => button.textContent='Copiar código', 1800); }
+  });
+}
+const sections = document.querySelectorAll('.lesson-section');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.side a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+entry.target.id));
+      }
+    }
+  }, {rootMargin:'-10% 0px -75% 0px',threshold:0});
+  sections.forEach(s => io.observe(s));
+}
+</script>
+</body>
+</html>
